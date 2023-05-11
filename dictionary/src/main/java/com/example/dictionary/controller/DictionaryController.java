@@ -16,6 +16,7 @@ import java.util.List;
 public class DictionaryController {
 
     private static final Logger logger = LoggerFactory.getLogger(DictionaryController.class.getName());
+
     private final DictionaryService dictionaryService;
 
     public DictionaryController(DictionaryService dictionaryService) {
@@ -39,6 +40,7 @@ public class DictionaryController {
                 .toString();
 
         logger.info(message);
+
         return entry;
     }
 
@@ -61,6 +63,30 @@ public class DictionaryController {
                 .toString();
 
         logger.info(message);
+
+        return entries;
+    }
+
+    @GetMapping("/getWordsEndingWith/{value}")
+    public List<Entry> getWordsEndingWith(@PathVariable String value) {
+
+        StopWatch sw = new StopWatch();
+        sw.start();
+        List<Entry> entries = this.dictionaryService.getWordsEndingWith(value);
+        sw.stop();
+
+        long nanoSeconds = sw.getLastTaskTimeNanos();
+        String message = new StringBuilder().append("Retrieved entries for words ending with [")
+                .append(value)
+                .append("] containing ")
+                .append(entries.size())
+                .append(" entries in ")
+                .append(nanoSeconds / 1000000.0)
+                .append("ms")
+                .toString();
+
+        logger.info(message);
+
         return entries;
     }
 
@@ -75,7 +101,7 @@ public class DictionaryController {
         long nanoSeconds = sw.getLastTaskTimeNanos();
         String message = new StringBuilder().append("Retrieved entries for words that contain [")
                 .append(value)
-                .append("] with ")
+                .append("] containing ")
                 .append(entries.size())
                 .append(" entries in ")
                 .append(nanoSeconds / 1000000.0)
@@ -83,11 +109,12 @@ public class DictionaryController {
                 .toString();
 
         logger.info(message);
+
         return entries;
     }
 
-    @GetMapping("/getWordsThatContainConsecutiveDoubleLetters")
-    public List<Entry> getWordsThatContainConsecutiveDoubleLetters() {
+    @GetMapping("/getWordsThatContainConsecutiveLetter")
+    public List<Entry> getWordsThatContainConsecutiveLetter() {
 
         StopWatch sw = new StopWatch();
         sw.start();
@@ -105,7 +132,7 @@ public class DictionaryController {
                 .toString();
 
         logger.info(message);
+
         return entries;
     }
-
 }
